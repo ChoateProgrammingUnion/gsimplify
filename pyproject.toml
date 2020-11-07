@@ -6,6 +6,10 @@ authors = ["echapman2022 <ethan.chapman0@outlook.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8.5"
+google-auth-oauthlib = "^0.4.2"
+google-api-python-client = "^1.12.5"
+google-auth-httplib2 = "^0.0.4"
+
 
 [tool.poetry.dev-dependencies]
 
