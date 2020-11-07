@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "titanium-haiku-294920",
+  "private_key_id": "a2a9bb79846089f1dd21c4af65209d2250a74e15",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD8QbcpL+mNGzHl\n+mJE5ACpywMO9wId9dd3s1oTbI/2kKmAouIUO0bfNhBFHmZc02vdMWrN8Dxy0Z1z\nGTRWO6N+UcVY+Txi+Jz+dwddyHtqxWeyFQW540fLwoaXBwIzovvAIehRGCNSAy0A\nUQlAAiHt7Hx90Vnd4mccDPMidECDWJ2m3vEYm+pR9E6sw4firO5G7GYv1qrmH+6K\naz3++UnjJOKZEoHn8Vcv3xpfw9SGCl5cM7GkzstrtCD7Cg4F21Xv4/WHOQ/+6GuS\npkkE7j7EdGaypImHISc4QM39rUqTJ1WwfS3+lO0ZMNrXfj5MIofH1cPFTI39DUYu\nSHBoBau/AgMBAAECggEABBU24IfuSnWlCbPhZat1utgIafkmGkovxGKVucHel2Kc\neCuAEph/dqSHABKnXvgRzMsDhg0LmBdFV36ukeFnmo1I3CHgurSeZBxvA0YsBQ+S\n0Q3ifyzFFZtYteKORDJbko2RpaHsmxfOgqgic4bEt5iuERQmhPRrE0M6GT4k5N7d\nWAEYzoC0Fv+u7dkBDU2I9TSczUwc54VjCQuJj03uMcia3dWvhKKcxyCRwXDKdsTt\nAJieBQiFtUY5No1CMDAKNjDZMgTap4LGQU019pixQvD4NYBcYAdw8FAl0lhWuqPb\nLUkvflAB1RBVYga5OnEFiLyqLQCwMr/MFyXQ5fvSAQKBgQD+uuxbcDj0vatMekNM\nkWizKBz2wq2eQipdOg+uf6PyvDzXsX39xEtnG8jrYffXwH63oAW9ln5FSBfRzM7O\nbuibys/tmuIiBAfcQEHAqc42GckMKQJKVCRWOzbilLInfspCJaTgCaZo84Y5P+Qv\nr4TxTuhQEfvB8sl+sgVAKEPAuQKBgQD9g6K6gnrutvxZ4+3ntCVmy02FRq69P0tn\ngJzc08PH6w7AIDl7NnD3c/neIYItkzU3kMa+RszuNwqnfC/XzcIF3sMWrU+UnRtO\njXry/FfqivQIUIELDAYqN/xIV2ekXOSKHRlweTMhGY85nx7HG7cM92VP5sEGj/yN\nCBoPXidkNwKBgQCaLqIppn+TA8rPe6GIkusApeMCKUvVYs8ppp8fS/r8TZu2IqTU\nGSBaxKKUdrQBT25jzuQqoRDE9qIURxdWNCNvSQ8aDomZdT8cvXgPGbjLXkgmqBvO\nyadE2oqaEs7SwRfDee2V/cFP/TbdKCMCCgc52D0dWgU8m6wCl9Y9wyFfYQKBgEwU\nuT1n8yS43brMYJVsxty2nqkksUQyPprtSiYrl1HkBSU7hoSnrfdVYuN7AupSh2IJ\nnNt1vAKxmgzxhBorsdK5K6sekAd1rsBATWmmuWu2D85++nsqPJ9m9dtv/7af+iZI\n3V2XwfRpC0arrjzq4GCPzmPQSJWDmLNqfwelpgS5AoGBAPy7U2w/SWXNajLyaGyi\nLLnpCPqcXk5WdIcKWq5JKonpK30yMIml2nsUtKZ7vUQp1DXpIm9JCRE4E0QOAGOj\nDnXXNBU+ByG9uippvhwXXy5BNQ4aJgXeKtH7aj13JzqVDS8nUMIQLp9xzssV7gW9\nu/ytJnlsBnIffyH4zrDhIP0Q\n-----END PRIVATE KEY-----\n",
+  "client_email": "simplify@titanium-haiku-294920.iam.gserviceaccount.com",
+  "client_id": "114067312630224418097",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/simplify%40titanium-haiku-294920.iam.gserviceaccount.com"
+}
