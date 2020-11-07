@@ -8,9 +8,10 @@ class Drive:
     def __init__(self, drive_id: str, service: Resource):
         self.drive_id = drive_id
         self.drive_info = service.teamdrives().get(teamDriveId=drive_id).execute()
+        self.service = service
         
     def files(self):
-        return service.files().list(
+        return self.service.files().list(
             corpora='teamDrive',
             supportsTeamDrives=True,
             teamDriveId=self.drive_id,

@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import Resource, build
 
-SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly']
+SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/drive.readonly']
 
 def load_creds():
     """
@@ -19,7 +19,10 @@ def load_creds():
     return credentials
 
 
-def load_drive(credentials):
+def load_drive():
+    credentials = load_creds()
     service: Resource = build('drive', 'v3', credentials=credentials)
+
     return service
+
 
