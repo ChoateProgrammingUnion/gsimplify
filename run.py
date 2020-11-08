@@ -1,6 +1,11 @@
+import pprint
+
 import simplify
 
 if __name__ == "__main__":
-    service = simplify.auth.load_drive()
-    drive = simplify.drive.Drive(drive_id="0AFB5gF1TxS1vUk9PVA", service=service)
-    print(drive.docs())
+    creds = simplify.auth.load_creds()
+    drive = simplify.drive.Drive("0AFB5gF1TxS1vUk9PVA", creds)
+    for each_doc in drive.docs(public=True):
+        document = simplify.docs.Docs(each_doc, creds)
+        print("AST\n", pprint.pformat(document.ast), len(document.ast))
+
