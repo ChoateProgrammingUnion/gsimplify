@@ -8,6 +8,7 @@ from googleapiclient.discovery import Resource, build
 SCOPES = [
     "https://www.googleapis.com/auth/drive.metadata.readonly",
     "https://www.googleapis.com/auth/drive.readonly",
+    'https://www.googleapis.com/auth/documents.readonly'
 ]
 
 
@@ -22,10 +23,3 @@ def load_creds():
         "creds.json", scopes=SCOPES
     )
     return credentials
-
-
-def load_drive():
-    credentials = load_creds()
-    service: Resource = build("drive", "v3", credentials=credentials)
-
-    return service

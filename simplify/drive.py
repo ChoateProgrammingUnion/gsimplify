@@ -1,32 +1,19 @@
+from typing import Optional
+
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import Resource, build
 from pydantic import BaseModel
 
-
-class DriveObj(BaseModel):
-    name: str
-    id: str
-    kind: str
-    mime_type: str
-    drive_id: str
-
-
-class Doc(DriveObj):
-    public: bool
-    draft: bool
-
-
-class Folder(DriveObj):
-    pass
+from simplify.typedefs import DocType, FolderType
 
 
 class Drive:
-    def __init__(self, drive_id: str, service: Resource):
+    def __init__(self, drive_id: str, creds):
         self.drive_id = drive_id
-        self.drive_info = service.teamdrives().get(teamDriveId=drive_id).execute()
-        self.service = service
+        self.service: Resource = build("drive", "v3", credentials=creds)
+        self.drive_info = self.service.teamdrives().get(teamDriveId=drive_id).execute()
         self.files = self.contains()
 
     def contains(self):
@@ -56,7 +43,7 @@ class Drive:
                     draft = False
 
                 container.append(
-                    Doc(
+                    DocType(
                         kind=each_obj.get("kind"),
                         id=each_obj.get("id"),
                         name=each_obj.get("name"),
@@ -64,12 +51,13 @@ class Drive:
                         drive_id=each_obj.get("driveId"),
                         draft=draft,
                         public=public,
+                        pointer=" ".join(each_obj.get("name").split(": ")[1:])
                     )
                 )
 
             elif each_obj.get("kind") == "application/vnd.google-apps.folder":
                 container.append(
-                    Doc(
+                    DocType(
                         kind=each_obj.get("kind"),
                         id=each_obj.get("id"),
                         name=each_obj.get("name"),
@@ -80,8 +68,27 @@ class Drive:
 
         return container
 
-    def docs(self):
-        return [x for x in self.files if isinstance(x, Doc)]
+    def docs(self, public: Optional[bool] = None, draft: Optional[bool] = None):
+        selector = self._selector(public, draft)
+
+        return [x for x in self.files if isinstance(x, DocType) and selector(x)]
 
     def folders(self):
-        return [x for x in self.files if isinstance(x, Folder)]
+        return [x for x in self.files if isinstance(x, FolderType)]
+
+    def _selector(self, public: Optional[bool] = None, draft: Optional[bool] = None):
+        if public:
+            public_selector = lambda x: x if x.public else False
+        elif public == False:
+            public_selector = lambda x: x if not x.public else False
+        else:
+            public_selector = lambda x: x
+
+        if draft:
+            selector = lambda x: public_selector(x) and public_selector(x).draft
+        elif public == False:
+            selector = lambda x: public_selector(x) and not public_selector(x).draft
+        else:
+            selector = lambda x: public_selector(x)
+
+        return selector
