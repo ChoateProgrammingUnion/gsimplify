@@ -6,6 +6,7 @@ from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import Resource, build
+from jinja2 import Template
 from pydantic import BaseModel
 
 from simplify.typedefs import DocType, FolderType
@@ -17,13 +18,16 @@ class Docs:
         self.document = doc
         self.service = build('docs', 'v1', credentials=creds)
         self.get(doc.id)
-        self.ast = self.parse()
+        self.document.ast = self.parse()
 
     def __str__(self):
-        return self.document.content, self.ast
+        return pprint.pformat(self.document)
 
     def __repr__(self):
-        return pprint.pformat((self.document.dict(), self.ast))
+        return str(self)
+
+    def render(self, template: Template) -> str:
+        return template.render(**self.document.dict())
 
     def get(self, id=str) -> dict:
         """
@@ -36,7 +40,10 @@ class Docs:
         """
         Parses document into a dict-like parse tree.
         """
-        return self.recursive_parse(self.document.content.get("body").get("content"))
+        ast = self.recursive_parse(self.document.content.get("body").get("content"))
+        self.document.title = list(ast.keys())[0].rstrip()
+
+        return ast
 
     def recursive_parse(self, structure: list, depth=0) -> dict:
         """
