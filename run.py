@@ -7,5 +7,5 @@ if __name__ == "__main__":
     drive = simplify.drive.Drive("0AFB5gF1TxS1vUk9PVA", creds)
     for each_doc in drive.docs(public=True):
         document = simplify.docs.Docs(each_doc, creds)
-        pprint.pprint(document)
+        print("AST\n", pprint.pformat(document.ast), len(document.ast))
 

@@ -17,6 +17,7 @@ class DocType(DriveObj):
     pointer: str
     title: Optional[str]
     content: Optional[dict]
+    ast: Optional[dict]
 
 
 class FolderType(DriveObj):
