@@ -108,10 +108,9 @@ class Docs:
             ast_slice = ast
             while relative_depth_level > 0:
                 relative_depth_level -= 1
-                if len(ast_slice) > 0:
-                    ast_slice = ast_slice[-1][1]
-                else:
+                if len(ast_slice) == 0:
                     ast_slice.append((None, []))
+                ast_slice = ast_slice[-1][1]
 
             ast_slice.append((content, []))
 
