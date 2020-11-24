@@ -55,9 +55,10 @@ class Drive:
                     )
                 )
 
-            elif each_obj.get("kind") == "application/vnd.google-apps.folder":
+            elif each_obj.get("mimeType") == "application/vnd.google-apps.folder":
+
                 container.append(
-                    DocType(
+                    FolderType(
                         kind=each_obj.get("kind"),
                         id=each_obj.get("id"),
                         name=each_obj.get("name"),
