@@ -11,26 +11,5 @@
 
 	<p>{{ast}}</p>
 
-	{% for h1, h2_ast_tup in ast.items() %}
-	{% if h1 and h2_ast_tup %}
-	<h1>{{h1}}<h1>
-		{% for h2_ast in h2_ast_tup %}
-			{% for h2, h3_ast_tup in h2_ast.items() %}
-				{% if h2 and h3_ast_tup %}
-				<h2>{{h2}}<h2>
-					{% for h3_ast in h3_ast_tup %}
-						{% for h3, h4_ast_tup in h3_ast.items() %}
-							{% if h3 and h4_ast %}
-							<h3>{{h3}}<h3>
-							{% endif %}
-						{% endfor %}
-					{% endfor %}
-				{% endif %}
-			{% endfor %}
-		{% endfor %}
-	{% endif %}
-	{% endfor %}
-
-
 </body>
 </html>

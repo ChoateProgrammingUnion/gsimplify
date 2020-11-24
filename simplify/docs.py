@@ -1,6 +1,6 @@
 import collections
 import pprint
-from typing import Optional
+from typing import List, Optional, Tuple
 
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
@@ -40,8 +40,8 @@ class Docs:
         """
         Parses document into a dict-like parse tree.
         """
-        ast = self.recursive_parse(self.document.content.get("body").get("content"))
-        self.document.title = list(ast.keys())[0].rstrip()
+        ast =  self.test_parse(self.document.content.get("body").get("content"))
+        self.document.title = ast[0][0]
 
         return ast
 
@@ -96,3 +96,31 @@ class Docs:
             if depth + 1 < len(DEPTH_LEVELS):
                 ast[""] = (collections.OrderedDict(), self.recursive_parse(structure, depth = depth + 1))
         return ast
+
+    def test_parse(self, structure: list) -> List[Tuple[str, List]]:
+        ast = []
+
+        for section in structure:
+            if "paragraph" not in section:
+                continue
+
+            paragraph = section.get("paragraph")
+            style: str = paragraph.get("paragraphStyle").get("namedStyleType")
+
+            content = "".join([elm.get("textRun").get("content") for elm in paragraph.get("elements")])
+
+            depth_level = DEPTH_LEVELS.index(style)
+
+            relative_depth_level = depth_level
+            ast_slice = ast
+            while relative_depth_level > 0:
+                relative_depth_level -= 1
+                if len(ast_slice) == 0:
+                    ast_slice.append((None, []))
+                ast_slice = ast_slice[-1][1]
+
+            ast_slice.append((content, []))
+
+        return ast
+
+
