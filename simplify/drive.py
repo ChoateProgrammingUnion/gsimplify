@@ -15,6 +15,7 @@ class Drive:
         self.service: Resource = build("drive", "v3", credentials=creds)
         self.drive_info = self.service.teamdrives().get(teamDriveId=drive_id).execute()
         self.files = self.contains()
+        self.file_tree = []
 
     def contains(self):
         drive_obj = (
@@ -24,6 +25,7 @@ class Drive:
                 supportsTeamDrives=True,
                 teamDriveId=self.drive_id,
                 includeTeamDriveItems=True,
+                fields="*" # TODO: restrict scope of fields to cut down on build times
             )
             .execute()
             .get("files")
@@ -56,7 +58,6 @@ class Drive:
                 )
 
             elif each_obj.get("mimeType") == "application/vnd.google-apps.folder":
-
                 container.append(
                     FolderType(
                         kind=each_obj.get("kind"),
