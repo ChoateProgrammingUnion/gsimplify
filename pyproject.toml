@@ -2,7 +2,7 @@
 name = "simplify"
 version = "0.1.0"
 description = ""
-authors = ["echapman2022 <ethan.chapman0@outlook.com>"]
+authors = ["echapman2022 <ethan.chapman0@outlook.com>", "Max Fan <root@max.fan>"]
 
 [tool.poetry.dependencies]
 python = "^3.8.5"
