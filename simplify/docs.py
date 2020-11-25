@@ -161,11 +161,10 @@ class Docs:
                 result += self.ast_to_html_tree(section[1], depth+1)
                 continue
 
-            indent = " " * depth
-            result.append(f"{indent}<section>")
+            result.append(f"<section>")
             text_type = HTML_DEPTH_LEVELS[depth]
-            result.append(f"{indent} <{text_type}>{section[0]}</{text_type}>")
+            result.append(f"<{text_type}>{section[0]}</{text_type}>")
             result += self.ast_to_html_tree(section[1], depth+1)
-            result.append(f"{indent}</section>")
+            result.append(f"</section>")
 
         return result
