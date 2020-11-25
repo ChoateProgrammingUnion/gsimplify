@@ -11,15 +11,16 @@ class DriveObj(BaseModel):
     drive_id: str
     parents: str
 
+    public: Optional[bool]
+    draft: Optional[bool]
+    webViewLink: Optional[str]
+    pointer: Optional[str]
+
 
 class DocType(DriveObj):
-    public: bool
-    draft: bool
-    pointer: str
     title: Optional[str]
     content: Optional[dict]
     ast: Optional[dict]
-    webViewLink: Optional[str]
 
 
 class FolderType(DriveObj):
