@@ -8,6 +8,10 @@ from pydantic import BaseModel
 
 from simplify.typedefs import DocType, FolderType
 
+"""
+TODO: Fix potential race conditions with a one-time fetch of drive objects
+"""
+
 
 class Drive:
     def __init__(self, drive_id: str, creds):
@@ -15,24 +19,23 @@ class Drive:
         self.service: Resource = build("drive", "v3", credentials=creds)
         self.drive_info = self.service.teamdrives().get(teamDriveId=drive_id).execute()
         self.files = self.contains()
-        self.file_tree = []
 
     def contains(self):
-        drive_obj = (
+        drive_objs = (
             self.service.files()
             .list(
                 corpora="teamDrive",
                 supportsTeamDrives=True,
                 teamDriveId=self.drive_id,
                 includeTeamDriveItems=True,
-                fields="*" # TODO: restrict scope of fields to cut down on build times
+                fields="*",  # TODO: restrict scope of fields to cut down on build times
             )
             .execute()
             .get("files")
         )
 
         container = []
-        for each_obj in drive_obj:
+        for each_obj in drive_objs:
             if each_obj.get("mimeType") == "application/vnd.google-apps.document":
                 if each_obj.get("name").startswith("PUBLIC:"):
                     public = True
@@ -53,7 +56,8 @@ class Drive:
                         drive_id=each_obj.get("driveId"),
                         draft=draft,
                         public=public,
-                        pointer=" ".join(each_obj.get("name").split(": ")[1:])
+                        pointer=" ".join(each_obj.get("name").split(": ")[1:]),
+                        parents=each_obj.get("parents")[0],
                     )
                 )
 
@@ -65,6 +69,7 @@ class Drive:
                         name=each_obj.get("name"),
                         mime_type=each_obj.get("mimeType"),
                         drive_id=each_obj.get("driveId"),
+                        parents=each_obj.get("parents")[0],
                     )
                 )
 
