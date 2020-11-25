@@ -9,7 +9,7 @@
 	{% endif %}
 	<hr>
 
-	<p>{{ast}}</p>
-
+	{% for element in html_tree %}
+	{{ element | safe }}{% endfor %}
 </body>
 </html>

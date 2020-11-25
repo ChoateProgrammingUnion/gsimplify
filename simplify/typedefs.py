@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from pydantic import BaseModel
 
@@ -18,7 +18,7 @@ class DocType(DriveObj):
     pointer: str
     title: Optional[str]
     content: Optional[dict]
-    ast: Optional[dict]
+    ast: Optional[List[Tuple[str, List]]]
 
 
 class FolderType(DriveObj):

@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from simplify.typedefs import DocType, FolderType
 
 DEPTH_LEVELS = ["TITLE", "HEADING_1", "HEADING_2", "HEADING_3", "NORMAL_TEXT"]
+HTML_DEPTH_LEVELS = ["title", "h1", "h2", "h3", "p"]
 
 
 class Docs:
@@ -28,7 +29,8 @@ class Docs:
         return str(self)
 
     def render(self, template: Template) -> str:
-        return template.render(**self.document.dict())
+        html_tree = self.ast_to_html_tree(self.document.ast[0][1])
+        return template.render(**self.document.dict(), html_tree=html_tree)
 
     def get(self, id=str) -> dict:
         """
@@ -47,6 +49,8 @@ class Docs:
         return ast
 
     def recursive_parse(self, structure: list, depth=0) -> dict:
+        HTML_DEPTH_LEVELS = [""]
+
         """
         Recursive/monadic parser.
         """
@@ -128,7 +132,10 @@ class Docs:
 
             content = "".join(
                 [elm.get("textRun").get("content") for elm in paragraph.get("elements")]
-            )
+            ).rstrip()
+
+            if len(content) < 1:
+                continue
 
             depth_level = DEPTH_LEVELS.index(style)
 
@@ -142,4 +149,23 @@ class Docs:
 
             ast_slice.append((content, []))
 
+        assert len(ast) == 1
+
         return ast
+
+    def ast_to_html_tree(self, ast: List[Tuple[str, List]], depth=1):
+        result = []
+
+        for section in ast:
+            if section[0] is None:
+                result += self.ast_to_html_tree(section[1], depth+1)
+                continue
+
+            indent = " " * depth
+            result.append(f"{indent}<section>")
+            text_type = HTML_DEPTH_LEVELS[depth]
+            result.append(f"{indent} <{text_type}>{section[0]}</{text_type}>")
+            result += self.ast_to_html_tree(section[1], depth+1)
+            result.append(f"{indent}</section>")
+
+        return result
