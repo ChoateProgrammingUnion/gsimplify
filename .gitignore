@@ -1,4 +1,6 @@
 .idea
+build
+build/
 .json
 
 # Byte-compiled / optimized / DLL files

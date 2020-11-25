@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -9,6 +9,7 @@ class DriveObj(BaseModel):
     kind: str
     mime_type: str
     drive_id: str
+    parents: str
 
 
 class DocType(DriveObj):
@@ -21,4 +22,8 @@ class DocType(DriveObj):
 
 
 class FolderType(DriveObj):
-    pass
+    path: Optional[List[str]]
+
+
+class Drive(BaseModel):
+    path: List[str] = [""]

@@ -8,7 +8,7 @@ from googleapiclient.discovery import Resource, build
 SCOPES = [
     "https://www.googleapis.com/auth/drive.metadata.readonly",
     "https://www.googleapis.com/auth/drive.readonly",
-    'https://www.googleapis.com/auth/documents.readonly'
+    "https://www.googleapis.com/auth/documents.readonly",
 ]
 
 
