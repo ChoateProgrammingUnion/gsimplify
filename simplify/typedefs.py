@@ -19,6 +19,7 @@ class DocType(DriveObj):
     title: Optional[str]
     content: Optional[dict]
     ast: Optional[dict]
+    webViewLink: Optional[str]
 
 
 class FolderType(DriveObj):

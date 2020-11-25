@@ -58,6 +58,7 @@ class Drive:
                         public=public,
                         pointer=" ".join(each_obj.get("name").split(": ")[1:]),
                         parents=each_obj.get("parents")[0],
+                        webViewLink=each_obj.get("webViewLink")
                     )
                 )
 
