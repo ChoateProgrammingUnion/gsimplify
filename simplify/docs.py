@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from simplify.typedefs import DocType, FolderType
 
 DEPTH_LEVELS = ["TITLE", "HEADING_1", "HEADING_2", "HEADING_3", "NORMAL_TEXT"]
-HTML_DEPTH_LEVELS = ["title", "h1", "h2", "h3", "p"]
+HTML_DEPTH_LEVELS = ["h1", "h2", "h3", "h4", "p"]
 
 
 class Docs:
@@ -29,7 +29,7 @@ class Docs:
         return str(self)
 
     def render(self, template: Template) -> str:
-        html_tree = self.ast_to_html_tree(self.document.ast[0][1])
+        html_tree = self.ast_to_html_tree(self.document.ast)
         return template.render(**self.document.dict(), html_tree=html_tree)
 
     def get(self, id=str) -> dict:
@@ -153,7 +153,7 @@ class Docs:
 
         return ast
 
-    def ast_to_html_tree(self, ast: List[Tuple[str, List]], depth=1):
+    def ast_to_html_tree(self, ast: List[Tuple[str, List]], depth=0):
         result = []
 
         for section in ast:
