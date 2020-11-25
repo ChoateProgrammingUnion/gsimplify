@@ -1,8 +1,10 @@
 import simplify.auth
 import os
 import simplify.drive
+import shutil
 import simplify.templates
 from typing import Union
+import git
 
 
 class Builder:
@@ -16,7 +18,7 @@ class Builder:
         self.file_tree = self.construct_folder_tree()
 
     @staticmethod
-    def path_join(folder, prefix=".build/"):
+    def path_join(folder, prefix="./build/"):
         return prefix + "/".join(folder.path)
 
     def construct_folder_tree(
@@ -60,14 +62,23 @@ class Builder:
             if each_folder.id == folder:
                 return each_folder
 
+    def fetch_commit(self) -> str:
+        repo = git.Repo(search_parent_directories=True)
+        commit = repo.head.object.hexsha
+        return commit[:6]
+
     def build(self):
         for each_doc in self.drive.docs(public=True):
-            path = self.path_join(self.find_folder(each_doc.parents), prefix="./build/")
+            path = self.path_join(self.find_folder(each_doc.parents), prefix=f"./build/{self.fetch_commit()}/")
+
             if not os.path.exists(path):
                 os.mkdir(path)
 
             with open(path + each_doc.pointer.lower() + ".html", "w") as f:
                 f.write(self.render(each_doc))
+
+            shutil.rmtree("./build/latest", ignore_errors=True)
+            shutil.copytree(path, "./build/latest")
 
     def render(self, doc, template="example.html"):
         document = simplify.docs.Docs(doc, self.creds)
