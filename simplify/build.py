@@ -107,7 +107,7 @@ class Builder:
                     pbar.close()
 
         shutil.rmtree("./build/latest", ignore_errors=True)
-        shutil.copytree(path, "./build/latest")
+        shutil.copytree(f"./build/{self.fetch_commit()}", "./build/latest")
 
     def render(self, doc, template="example.html"):
         document = simplify.docs.Docs(doc, self.creds)
