@@ -60,7 +60,6 @@ class Builder:
             return simplify.typedefs.Drive()
 
         for each_folder in self.folders:
-            print(each_folder, folder)
             if each_folder.id == folder:
                 return each_folder
 
@@ -87,7 +86,6 @@ class Builder:
                 self.find_folder(each_file.parents),
                 prefix=f"./build/{self.fetch_commit()}",
             )
-            print(path)
             if not os.path.exists(path):
                 os.mkdir(path)
 
