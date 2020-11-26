@@ -30,7 +30,8 @@ class Docs:
 
     def render(self, template: Template) -> str:
         html_tree = self.ast_to_html_tree(self.document.ast)
-        return template.render(**self.document.dict(), html_tree=html_tree)
+        navbar_items = [("Homepage", "/")]
+        return template.render(**self.document.dict(), html_tree=html_tree, navbar_items=navbar_items)
 
     def get(self, id=str) -> dict:
         """

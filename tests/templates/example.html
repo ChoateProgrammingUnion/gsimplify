@@ -15,7 +15,14 @@
 	<!-- You should properly set the path from the main file. -->
 </head>
 <body>
+	<nav>
+		{% for nav_element in navbar_items %}
+			<a href="{{ nav_element[1] }}">{{ nav_element[0] }}</a>
+		{% endfor %}
+	</nav>
+
 	{% if public %}
+	<hr>
 	<p>This is an official public document published by Choate Rosemary Hall's Student Council. For inquiries, feel free to contact example@example.com.</p>
 	{% endif %}
 	<hr>
