@@ -6,7 +6,11 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import Resource, build
 from pydantic import BaseModel
 
-from simplify.typedefs import DocType, FolderType
+from simplify.typedefs import DocType, FolderType, DriveObj
+
+"""
+TODO: Fix potential race conditions with a one-time fetch of drive objects
+"""
 
 """
 TODO: Fix potential race conditions with a one-time fetch of drive objects
@@ -36,32 +40,7 @@ class Drive:
 
         container = []
         for each_obj in drive_objs:
-            if each_obj.get("mimeType") == "application/vnd.google-apps.document":
-                if each_obj.get("name").startswith("PUBLIC:"):
-                    public = True
-                    draft = False
-                elif each_obj.get("name").startswith("DRAFT:"):
-                    public = False
-                    draft = True
-                else:
-                    public = False
-                    draft = False
-
-                container.append(
-                    DocType(
-                        kind=each_obj.get("kind"),
-                        id=each_obj.get("id"),
-                        name=each_obj.get("name"),
-                        mime_type=each_obj.get("mimeType"),
-                        drive_id=each_obj.get("driveId"),
-                        draft=draft,
-                        public=public,
-                        pointer=" ".join(each_obj.get("name").split(": ")[1:]),
-                        parents=each_obj.get("parents")[0],
-                    )
-                )
-
-            elif each_obj.get("mimeType") == "application/vnd.google-apps.folder":
+            if each_obj.get("mimeType") == "application/vnd.google-apps.folder":
                 container.append(
                     FolderType(
                         kind=each_obj.get("kind"),
@@ -72,6 +51,49 @@ class Drive:
                         parents=each_obj.get("parents")[0],
                     )
                 )
+            else:
+                if each_obj.get("name").startswith("PUBLIC:"):
+                    public = True
+                    draft = False
+                elif each_obj.get("name").startswith("DRAFT:"):
+                    public = False
+                    draft = True
+                else:
+                    public = False
+                    draft = False
+
+                if each_obj.get("mimeType") == "application/vnd.google-apps.document":
+
+                    container.append(
+                        DocType(
+                            kind=each_obj.get("kind"),
+                            id=each_obj.get("id"),
+                            name=each_obj.get("name"),
+                            mime_type=each_obj.get("mimeType"),
+                            drive_id=each_obj.get("driveId"),
+                            draft=draft,
+                            public=public,
+                            pointer=" ".join(each_obj.get("name").split(": ")[1:]),
+                            parents=each_obj.get("parents")[0],
+                            webViewLink=each_obj.get("webViewLink"),
+                        )
+                    )
+
+                else:
+                    container.append(
+                        DriveObj(
+                            kind=each_obj.get("kind"),
+                            id=each_obj.get("id"),
+                            name=each_obj.get("name"),
+                            mime_type=each_obj.get("mimeType"),
+                            drive_id=each_obj.get("driveId"),
+                            pointer=" ".join(each_obj.get("name").split(": ")[1:]),
+                            parents=each_obj.get("parents")[0],
+                            draft=draft,
+                            public=public,
+                            webViewLink=each_obj.get("webViewLink"),
+                        )
+                    )
 
         return container
 
@@ -79,6 +101,16 @@ class Drive:
         selector = self._selector(public, draft)
 
         return [x for x in self.files if isinstance(x, DocType) and selector(x)]
+
+    def media(self, public: Optional[bool] = None, draft: Optional[bool] = None):
+        selector = self._selector(public, draft)
+        return [
+            x
+            for x in self.files
+            if not isinstance(x, FolderType)
+            and not isinstance(x, DocType)
+            and selector(x)
+        ]
 
     def folders(self):
         return [x for x in self.files if isinstance(x, FolderType)]
