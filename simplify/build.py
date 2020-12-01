@@ -20,7 +20,7 @@ class Builder:
         self.file_tree = self.construct_folder_tree()
 
     @staticmethod
-    def path_join(folder, prefix="./build/"):
+    def path_join(folder: simplify.typedefs.FolderType, prefix: str = "./build/"):
         return prefix + "/".join(folder.path) + "/"
 
     def construct_folder_tree(
@@ -64,16 +64,25 @@ class Builder:
                 return each_folder
 
     def fetch_commit(self) -> str:
+        """
+        Fetches latest commit hash of repo.
+        """
         repo = git.Repo(search_parent_directories=True)
         commit = repo.head.object.hexsha
         return commit[:6]
 
     def build(self, visual=True):
+        """
+        Loops and builds static website.
+        """
         for each_doc in self.drive.docs(public=True):
             path = self.path_join(
                 self.find_folder(each_doc.parents),
                 prefix=f"./build/{self.fetch_commit()}",
             )
+
+            if not os.path.exists("./build"):
+                os.mkdir("./build")
 
             if not os.path.exists(path):
                 os.mkdir(path)
