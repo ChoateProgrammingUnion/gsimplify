@@ -1,5 +1,3 @@
-import pprint
-
 import simplify
 
 if __name__ == "__main__":
