@@ -10,11 +10,13 @@ import git
 
 
 class Builder:
-    def __init__(self, drive_str: str, template_dir: str):
+    def __init__(self, drive_str: str, template_dir: str, assets_dir: str = ""):
         self.drive_str = drive_str
         self.creds = gsimplify.auth.load_creds()
         self.drive = gsimplify.drive.Drive(drive_str, self.creds)
         self.templator = gsimplify.templates.Templates(template_dir)
+        self.template_dir = template_dir
+        self.assets_dir = assets_dir
 
         self.folders = self.drive.folders()
         self.file_tree = self.construct_folder_tree()
@@ -115,8 +117,12 @@ class Builder:
                 if visual:
                     pbar.close()
 
+        if self.assets_dir:
+            shutil.copytree(self.assets_dir, f"./build/{self.fetch_commit()}/assets/")
+
         shutil.rmtree("./build/latest", ignore_errors=True)
         shutil.copytree(f"./build/{self.fetch_commit()}", "./build/latest")
+
 
     def render(self, doc, template="example.html"):
         document = gsimplify.docs.Docs(doc, self.creds)
