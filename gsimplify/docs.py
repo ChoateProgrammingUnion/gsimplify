@@ -9,7 +9,7 @@ from googleapiclient.discovery import Resource, build
 from jinja2 import Template
 from pydantic import BaseModel
 
-from simplify.typedefs import DocType, FolderType
+from gsimplify.typedefs import DocType, FolderType
 
 DEPTH_LEVELS = ["TITLE", "HEADING_1", "HEADING_2", "HEADING_3", "NORMAL_TEXT"]
 

@@ -6,7 +6,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import Resource, build
 from pydantic import BaseModel
 
-from simplify.typedefs import DocType, FolderType, DriveObj
+from gsimplify.typedefs import DocType, FolderType, DriveObj
 
 """
 TODO: Fix potential race conditions with a one-time fetch of drive objects

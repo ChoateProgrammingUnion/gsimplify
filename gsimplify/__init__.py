@@ -1,5 +1,5 @@
-import simplify.auth
-import simplify.build
-import simplify.docs
-import simplify.drive
-import simplify.templates
+import gsimplify.auth
+import gsimplify.build
+import gsimplify.docs
+import gsimplify.drive
+import gsimplify.templates
