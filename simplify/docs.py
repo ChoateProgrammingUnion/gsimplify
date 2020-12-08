@@ -16,11 +16,15 @@ HTML_DEPTH_LEVELS = ["h1", "h2", "h3", "h4", "p"]
 
 
 class Docs:
-    def __init__(self, doc: DocType, creds):
+    def __init__(self, doc: DocType, creds, navbar_items: List[Tuple[str, str]] = None):
         self.document = doc
         self.service = build("docs", "v1", credentials=creds)
         self.get(doc.id)
         self.document.ast = self.parse()
+
+        self.navbar_items = navbar_items
+        if self.navbar_items is None:
+            self.navbar_items = []
 
     def __str__(self):
         return pprint.pformat(self.document)
@@ -30,8 +34,7 @@ class Docs:
 
     def render(self, template: Template) -> str:
         html_tree = self.ast_to_html_tree(self.document.ast)
-        navbar_items = [("Homepage", "/")]
-        return template.render(**self.document.dict(), html_tree=html_tree, navbar_items=navbar_items)
+        return template.render(**self.document.dict(), html_tree=html_tree, navbar_items=self.navbar_items)
 
     def get(self, id=str) -> dict:
         """

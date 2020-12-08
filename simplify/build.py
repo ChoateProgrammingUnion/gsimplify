@@ -5,8 +5,10 @@ import simplify.drive
 import shutil
 from googleapiclient.http import MediaIoBaseDownload
 import simplify.templates
-from typing import Union
+from typing import Union, List, Tuple
 import git
+
+from simplify.typedefs import FolderType
 
 
 class Builder:
@@ -18,6 +20,8 @@ class Builder:
 
         self.folders = self.drive.folders()
         self.file_tree = self.construct_folder_tree()
+        self.navbar_items = self.construct_navbar()
+
 
     @staticmethod
     def path_join(folder: simplify.typedefs.FolderType, prefix: str = "./build/"):
@@ -52,6 +56,35 @@ class Builder:
                 )
 
         return level_folders
+
+    def construct_navbar(self) -> List[Tuple[str, str]]:
+        for doc in self.drive.docs():
+            if doc.name == "Navbar":
+                navbar = doc
+                break
+        else:
+            print("Navbar not found!")  # TODO Handle this better
+            return []
+
+        simplify.docs.Docs(navbar, self.creds)
+
+        sections = navbar.content['body']['content']
+
+        navbar_items = []
+
+        for section in sections:
+            if 'paragraph' not in section:
+                continue
+            for element in section['paragraph']['elements']:
+                if 'textRun' not in element:
+                    continue
+                if 'link' not in element['textRun']['textStyle']:
+                    continue
+                name = element['textRun']['content']
+                link = element['textRun']['textStyle']['link']['url']
+                navbar_items.append((name, link))
+
+        return navbar_items
 
     def find_folder(
         self, folder: str
@@ -119,5 +152,5 @@ class Builder:
         shutil.copytree(f"./build/{self.fetch_commit()}", "./build/latest")
 
     def render(self, doc, template="example.html"):
-        document = simplify.docs.Docs(doc, self.creds)
+        document = simplify.docs.Docs(doc, self.creds, self.navbar_items)
         return document.render(self.templator.get("example.html"))
