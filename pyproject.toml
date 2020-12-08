@@ -8,7 +8,7 @@ license = "MIT"
 repository = "https://github.com/ChoateProgrammingUnion/simplify"
 
 [tool.poetry.dependencies]
-python = "^3.8.5"
+python = ">=3.6"
 google-api-python-client = "^1.12.5"
 google-auth-httplib2 = "^0.0.4"
 google-auth-oauthlib = "^0.4.2"
