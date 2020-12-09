@@ -158,10 +158,6 @@ class Docs:
         return ast
 
     def ast_to_html_tree(self, ast: List[Tuple[str, List]], depth=0):
-        sectioned_levels = ["h2"]
-        section_start = '<div class="main"><section>'
-        section_end = '</section></div>'
-
         result = []
 
         for section in ast:
@@ -170,15 +166,14 @@ class Docs:
                 continue
 
             text_type = HTML_DEPTH_LEVELS[depth]
-            sectioned = text_type in sectioned_levels
-
-            if sectioned:
-                result.append(section_start)
-
             result.append(f"<{text_type}>{section[0]}</{text_type}>")
+
+            if text_type == "h1":
+                result.append('<div class="main"><section>')
+
             result += self.ast_to_html_tree(section[1], depth+1)
 
-            if sectioned:
-                result.append(section_end)
+            if text_type == "h1":
+                result.append('</section></div>')
 
         return result
