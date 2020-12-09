@@ -149,7 +149,7 @@ class Builder:
         for each_file in self.drive.media(public=True):
             path = self.path_join(
                 self.find_folder(each_file.parents),
-                prefix=f"./build/{self.fetch_commit()}",
+                prefix=f"./build/{self.fetch_commit()}/",
             )
             if not os.path.exists(path):
                 os.mkdir(path)
