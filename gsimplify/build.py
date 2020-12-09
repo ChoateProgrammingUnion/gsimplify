@@ -48,7 +48,7 @@ class Builder:
 
     @staticmethod
     def path_join(folder: gsimplify.typedefs.FolderType, prefix: str = "./build/"):
-        return prefix + "/".join(folder.path) + "/"
+        return prefix + "/".join(folder.path).replace(" ","_").lower() + "/"
 
     def construct_folder_tree(
         self, path: list = [], start_folder: str = None
