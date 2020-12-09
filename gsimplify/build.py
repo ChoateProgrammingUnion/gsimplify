@@ -40,7 +40,7 @@ class Builder:
                         print("folder not found!")
                         return link
 
-                    path = f'{self.path_join(folder, "")}{doc.pointer}.html'
+                    path = f'{self.path_join(folder, "")}{doc.pointer.lower().replace(" ", "_")}.html'
 
                     return path
 
