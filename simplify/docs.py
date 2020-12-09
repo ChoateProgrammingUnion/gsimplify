@@ -158,7 +158,7 @@ class Docs:
         return ast
 
     def ast_to_html_tree(self, ast: List[Tuple[str, List]], depth=0):
-        sectioned_levels = ["h2", "p"]
+        sectioned_levels = ["h2"]
         section_start = '<div class="main"><section>'
         section_end = '</section></div>'
 
