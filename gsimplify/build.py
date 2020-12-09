@@ -89,7 +89,7 @@ class Builder:
             print("Navbar not found!")  # TODO Handle this better
             return []
 
-        simplify.docs.Docs(navbar, self.creds)
+        gsimplify.docs.Docs(navbar, self.creds)
 
         sections = navbar.content['body']['content']
 
