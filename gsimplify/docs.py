@@ -9,8 +9,8 @@ from googleapiclient.discovery import Resource, build
 from jinja2 import Template
 from pydantic import BaseModel
 
-from simplify.build import Builder
-from simplify.typedefs import DocType, FolderType, Drive
+from gsimplify.build import Builder
+from gsimplify.typedefs import DocType, FolderType, Drive
 
 DEPTH_LEVELS = ["TITLE", "HEADING_1", "HEADING_2", "HEADING_3", "NORMAL_TEXT"]
 HTML_DEPTH_LEVELS = ["h1", "h2", "h3", "h4", "p"]

@@ -1,22 +1,24 @@
-import simplify.auth
+import gsimplify.auth
 import tqdm
 import os
-import simplify.drive
+import gsimplify.drive
 import shutil
 from googleapiclient.http import MediaIoBaseDownload
-import simplify.templates
+import gsimplify.templates
 from typing import Union, List, Tuple
 import git
 
-from simplify.typedefs import FolderType
+from gsimplify.typedefs import FolderType
 
 
 class Builder:
-    def __init__(self, drive_str: str, template_dir: str):
+    def __init__(self, drive_str: str, template_dir: str, assets_dir: str = ""):
         self.drive_str = drive_str
-        self.creds = simplify.auth.load_creds()
-        self.drive = simplify.drive.Drive(drive_str, self.creds)
-        self.templator = simplify.templates.Templates(template_dir)
+        self.creds = gsimplify.auth.load_creds()
+        self.drive = gsimplify.drive.Drive(drive_str, self.creds)
+        self.templator = gsimplify.templates.Templates(template_dir)
+        self.template_dir = template_dir
+        self.assets_dir = assets_dir
 
         self.folders = self.drive.folders()
         self.file_tree = self.construct_folder_tree()
@@ -45,7 +47,7 @@ class Builder:
         return link
 
     @staticmethod
-    def path_join(folder: simplify.typedefs.FolderType, prefix: str = "./build/"):
+    def path_join(folder: gsimplify.typedefs.FolderType, prefix: str = "./build/"):
         return prefix + "/".join(folder.path) + "/"
 
     def construct_folder_tree(
@@ -109,9 +111,9 @@ class Builder:
 
     def find_folder(
         self, folder: str
-    ) -> Union[simplify.typedefs.DocType, simplify.typedefs.Drive]:
+    ) -> Union[gsimplify.typedefs.DocType, gsimplify.typedefs.Drive]:
         if folder == self.drive_str:
-            return simplify.typedefs.Drive()
+            return gsimplify.typedefs.Drive()
 
         for each_folder in self.folders:
             if each_folder.id == folder:
@@ -169,9 +171,13 @@ class Builder:
                 if visual:
                     pbar.close()
 
+        if self.assets_dir:
+            shutil.copytree(self.assets_dir, f"./build/{self.fetch_commit()}/assets/")
+
         shutil.rmtree("./build/latest", ignore_errors=True)
         shutil.copytree(f"./build/{self.fetch_commit()}", "./build/latest")
 
+
     def render(self, doc, template="example.html"):
-        document = simplify.docs.Docs(doc, self.creds, self.navbar_items, self)
+        document = gsimplify.docs.Docs(doc, self.creds, self.navbar_items, self)
         return document.render(self.templator.get("example.html"))
