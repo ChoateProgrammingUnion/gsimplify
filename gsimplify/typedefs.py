@@ -13,6 +13,7 @@ class DriveObj(BaseModel):
 
     public: Optional[bool]
     draft: Optional[bool]
+    meta: Optional[bool]
     webViewLink: Optional[str]
     pointer: Optional[str]
 
