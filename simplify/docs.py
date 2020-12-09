@@ -134,8 +134,13 @@ class Docs:
             paragraph = section.get("paragraph")
             style: str = paragraph.get("paragraphStyle").get("namedStyleType")
 
+            def text_run_to_str(text_run: dict) -> str:
+                if "link" in text_run["textStyle"]:
+                    return f'<a href="{text_run["textStyle"]["link"]["url"]}">{text_run["content"]}</a>'
+                return text_run['content']
+
             content = "".join(
-                [elm.get("textRun").get("content") for elm in paragraph.get("elements")]
+                [text_run_to_str(elm.get("textRun")) for elm in paragraph.get("elements")]
             ).rstrip()
 
             if len(content) < 1:
