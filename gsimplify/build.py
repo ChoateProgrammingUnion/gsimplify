@@ -172,6 +172,8 @@ class Builder:
                     pbar.close()
 
         if self.assets_dir:
+            if os.path.exists(f"./build/{self.fetch_commit()}/assets/"):
+                shutil.rmtree(f"./build/{self.fetch_commit()}/assets/")
             shutil.copytree(self.assets_dir, f"./build/{self.fetch_commit()}/assets/")
 
         shutil.rmtree("./build/latest", ignore_errors=True)

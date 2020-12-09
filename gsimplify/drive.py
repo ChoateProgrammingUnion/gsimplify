@@ -55,15 +55,9 @@ class Drive:
                 if each_obj.get("name").startswith("PUBLIC:"):
                     public = True
                     draft = False
-                    meta = False
                 elif each_obj.get("name").startswith("DRAFT:"):
                     public = False
                     draft = True
-                    meta = False
-                elif each_obj.get("name").startswith("META:"):
-                    public = False
-                    draft = False
-                    meta = True
                 else:
                     public = False
                     draft = False
@@ -79,7 +73,6 @@ class Drive:
                             drive_id=each_obj.get("driveId"),
                             draft=draft,
                             public=public,
-                            meta=meta,
                             pointer=" ".join(each_obj.get("name").split(": ")[1:]),
                             parents=each_obj.get("parents")[0],
                             webViewLink=each_obj.get("webViewLink"),
@@ -98,19 +91,18 @@ class Drive:
                             parents=each_obj.get("parents")[0],
                             draft=draft,
                             public=public,
-                            meta=meta,
                             webViewLink=each_obj.get("webViewLink"),
                         )
                     )
 
         return container
 
-    def docs(self, public: Optional[bool] = None, draft: Optional[bool] = None, meta: Optional[bool] = None):
+    def docs(self, public: Optional[bool] = None, draft: Optional[bool] = None):
         selector = self._selector(public, draft)
 
         return [x for x in self.files if isinstance(x, DocType) and selector(x)]
 
-    def media(self, public: Optional[bool] = None, draft: Optional[bool] = None, meta: Optional[bool] = None):
+    def media(self, public: Optional[bool] = None, draft: Optional[bool] = None):
         selector = self._selector(public, draft)
         return [
             x
@@ -133,7 +125,7 @@ class Drive:
                 path=[]
             )]
 
-    def _selector(self, public: Optional[bool] = None, draft: Optional[bool] = None, meta: Optional[bool] = None):
+    def _selector(self, public: Optional[bool] = None, draft: Optional[bool] = None):
         if public:
             public_selector = lambda x: x if x.public else False
         elif public == False:
@@ -149,9 +141,4 @@ class Drive:
             draft_selector = lambda x: public_selector(x)
 
 
-        if meta:
-            selector = lambda x: draft_selector(x) and draft_selector(x).meta
-        else:
-            selector = lambda x: draft_selector(x)
-
-        return selector
+        return draft_selector

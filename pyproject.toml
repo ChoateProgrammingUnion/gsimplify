@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gsimplify"
-version = "0.0.5"
+version = "0.0.7"
 description = ""
 authors = ["echapman2022 <ethan.chapman0@outlook.com>", "Max Fan <root@max.fan>"]
 readme = "README.md"
