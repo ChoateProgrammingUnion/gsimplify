@@ -9,22 +9,26 @@ from googleapiclient.discovery import Resource, build
 from jinja2 import Template
 from pydantic import BaseModel
 
-from simplify.typedefs import DocType, FolderType
+from simplify.build import Builder
+from simplify.typedefs import DocType, FolderType, Drive
 
 DEPTH_LEVELS = ["TITLE", "HEADING_1", "HEADING_2", "HEADING_3", "NORMAL_TEXT"]
 HTML_DEPTH_LEVELS = ["h1", "h2", "h3", "h4", "p"]
 
 
 class Docs:
-    def __init__(self, doc: DocType, creds, navbar_items: List[Tuple[str, str]] = None):
+    def __init__(self, doc: DocType, creds, navbar_items: List[Tuple[str, str]] = None, builder: Builder = None):
         self.document = doc
         self.service = build("docs", "v1", credentials=creds)
         self.get(doc.id)
-        self.document.ast = self.parse()
 
         self.navbar_items = navbar_items
         if self.navbar_items is None:
             self.navbar_items = []
+
+        self.builder = builder
+
+        self.document.ast = self.parse()
 
     def __str__(self):
         return pprint.pformat(self.document)
@@ -136,7 +140,10 @@ class Docs:
 
             def text_run_to_str(text_run: dict) -> str:
                 if "link" in text_run["textStyle"]:
-                    return f'<a href="{text_run["textStyle"]["link"]["url"]}">{text_run["content"]}</a>'
+                    link = text_run["textStyle"]["link"]["url"]
+                    if self.builder is not None:
+                        link = self.builder.adjust_relative_link(link)
+                    return f'<a href="{link}">{text_run["content"]}</a>'
                 return text_run['content']
 
             content = "".join(

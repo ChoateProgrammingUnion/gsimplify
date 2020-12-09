@@ -29,4 +29,4 @@ class FolderType(DriveObj):
 
 
 class Drive(BaseModel):
-    path: List[str] = [""]
+    path: List[str] = []

@@ -113,7 +113,17 @@ class Drive:
         ]
 
     def folders(self):
-        return [x for x in self.files if isinstance(x, FolderType)]
+        return [x for x in self.files if isinstance(x, FolderType)] + [
+            FolderType(
+                kind="",
+                id=self.drive_id,
+                name="",
+                mime_type="",
+                drive_id=self.drive_id,
+                pointer="",
+                parents="",
+                path=[]
+            )]
 
     def _selector(self, public: Optional[bool] = None, draft: Optional[bool] = None):
         if public:

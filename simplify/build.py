@@ -22,13 +22,34 @@ class Builder:
         self.file_tree = self.construct_folder_tree()
         self.navbar_items = self.construct_navbar()
 
+    def adjust_relative_link(self, link: str):
+        DRIVE_LINK_PREFIX = "https://docs.google.com/document/d/"
+        DRIVE_LINK_END = "/"
+
+        if DRIVE_LINK_PREFIX in link:
+            doc_id = link.split(DRIVE_LINK_PREFIX)[1].split(DRIVE_LINK_END)[0]
+
+            for doc in self.drive.docs():
+                if doc_id == doc.id:
+                    for folder in self.drive.folders():
+                        if folder.id == doc.parents:
+                            break
+                    else:
+                        print("folder not found!")
+                        return link
+
+                    path = f'{self.path_join(folder, "")}{doc.pointer}.html'
+
+                    return path
+
+        return link
 
     @staticmethod
     def path_join(folder: simplify.typedefs.FolderType, prefix: str = "./build/"):
         return prefix + "/".join(folder.path) + "/"
 
     def construct_folder_tree(
-        self, path: list = [""], start_folder: str = None
+        self, path: list = [], start_folder: str = None
     ) -> list:
         """
         Recursively builds a folder tree.
@@ -82,7 +103,7 @@ class Builder:
                     continue
                 name = element['textRun']['content']
                 link = element['textRun']['textStyle']['link']['url']
-                navbar_items.append((name, link))
+                navbar_items.append((name, self.adjust_relative_link(link)))
 
         return navbar_items
 
@@ -152,5 +173,5 @@ class Builder:
         shutil.copytree(f"./build/{self.fetch_commit()}", "./build/latest")
 
     def render(self, doc, template="example.html"):
-        document = simplify.docs.Docs(doc, self.creds, self.navbar_items)
+        document = simplify.docs.Docs(doc, self.creds, self.navbar_items, self)
         return document.render(self.templator.get("example.html"))
