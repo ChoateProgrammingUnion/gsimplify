@@ -25,24 +25,28 @@ class Builder:
         self.navbar_items = self.construct_navbar()
 
     def adjust_relative_link(self, link: str):
-        DRIVE_LINK_PREFIX = "https://docs.google.com/document/d/"
+        DRIVE_LINK_PREFIX = "/d/"
         DRIVE_LINK_END = "/"
 
         if DRIVE_LINK_PREFIX in link:
             doc_id = link.split(DRIVE_LINK_PREFIX)[1].split(DRIVE_LINK_END)[0]
 
-            for doc in self.drive.docs():
-                if doc_id == doc.id:
-                    for folder in self.drive.folders():
-                        if folder.id == doc.parents:
-                            break
-                    else:
-                        print("folder not found!")
-                        return link
+            for each_file in self.drive.media():
+                print(each_file.pointer, each_file.id, doc_id)
+                if doc_id == each_file.id:
+                    folder = self.find_folder(each_file.parents)
+                    return f'{self.path_join(folder, "")}{each_file.pointer.lower().replace(" ", "_")}'
+            else:
+                for doc in self.drive.docs(public=True):
+                    if doc_id == doc.id:
+                        folder = self.find_folder(doc.parents)
+                        # for folder in self.drive.folders():
+                        #     if folder.id == doc.parents:
+                        #         break
+                        # else: # folder not found
+                        #     return link
 
-                    path = f'{self.path_join(folder, "")}{doc.pointer.lower().replace(" ", "_")}.html'
-
-                    return path
+                        return f'{self.path_join(folder, "")}{doc.pointer.lower().replace(" ", "_")}.html'
 
         return link
 
@@ -107,6 +111,7 @@ class Builder:
                 link = element['textRun']['textStyle']['link']['url']
                 navbar_items.append((name, self.adjust_relative_link(link)))
 
+        print(navbar_items)
         return navbar_items
 
     def find_folder(
