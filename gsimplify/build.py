@@ -32,7 +32,6 @@ class Builder:
             doc_id = link.split(DRIVE_LINK_PREFIX)[1].split(DRIVE_LINK_END)[0]
 
             for each_file in self.drive.media():
-                print(each_file.pointer, each_file.id, doc_id)
                 if doc_id == each_file.id:
                     folder = self.find_folder(each_file.parents)
                     return f'{self.path_join(folder, "")}{each_file.pointer.lower().replace(" ", "_")}'
@@ -111,7 +110,6 @@ class Builder:
                 link = element['textRun']['textStyle']['link']['url']
                 navbar_items.append((name, self.adjust_relative_link(link)))
 
-        print(navbar_items)
         return navbar_items
 
     def find_folder(
