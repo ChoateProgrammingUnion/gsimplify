@@ -12,11 +12,6 @@ from gsimplify.typedefs import DocType, FolderType, DriveObj
 TODO: Fix potential race conditions with a one-time fetch of drive objects
 """
 
-"""
-TODO: Fix potential race conditions with a one-time fetch of drive objects
-"""
-
-
 class Drive:
     def __init__(self, drive_id: str, creds):
         self.drive_id = drive_id

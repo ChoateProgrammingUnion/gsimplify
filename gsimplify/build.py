@@ -154,7 +154,7 @@ class Builder:
             if not os.path.exists(path):
                 os.mkdir(path)
 
-            with open(path + each_file.pointer.lower(), "wb") as f:
+            with open(path + each_file.pointer.lower().replace(" ", "_"), "wb") as f:
                 file_handler = self.drive.service.files().get_media(fileId=each_file.id)
                 downloader = MediaIoBaseDownload(f, file_handler)  # from google's docs
 
