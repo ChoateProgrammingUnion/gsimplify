@@ -27,8 +27,9 @@ class Builder:
     def adjust_relative_link(self, link: str):
         DRIVE_LINK_PREFIX = "/d/"
         DRIVE_LINK_END = "/"
+        STRING_MATCH = ".google.com"
 
-        if DRIVE_LINK_PREFIX in link:
+        if DRIVE_LINK_PREFIX in link and STRING_MATCH in link:
             doc_id = link.split(DRIVE_LINK_PREFIX)[1].split(DRIVE_LINK_END)[0]
 
             for each_file in self.drive.media():

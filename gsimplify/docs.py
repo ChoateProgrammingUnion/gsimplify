@@ -51,6 +51,7 @@ class Docs:
         """
         Parses document into a dict-like parse tree.
         """
+        print(self.document)
         ast = self.test_parse(self.document.content.get("body").get("content"))
         self.document.title = ast[0][0]
 
